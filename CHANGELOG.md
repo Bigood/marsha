@@ -8,6 +8,10 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Manage live streaming using AWS Elemental
+
 ## [3.10.0] - 2020-08-18
 
 ### Added
