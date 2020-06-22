@@ -58,6 +58,8 @@ describe('<DashboardVideoPaneTranscriptOption />', () => {
       title: 'foo',
       lti_id: 'foo+context_id',
     },
+    live_state: null,
+    live_info: {},
   };
 
   it('renders nothing if there is no timed text track', () => {

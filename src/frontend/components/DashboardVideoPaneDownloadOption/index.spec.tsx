@@ -50,6 +50,8 @@ describe('<DashboardVideoPaneDownloadOption />', () => {
       title: 'foo',
       lti_id: 'foo+context_id',
     },
+    live_state: null,
+    live_info: {},
   };
 
   it('renders with checkbox not checked', () => {

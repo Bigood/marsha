@@ -80,6 +80,8 @@ describe('<DashboardThumbnail />', () => {
       title: 'foo',
       lti_id: 'foo+context_id',
     },
+    live_state: null,
+    live_info: {},
   };
 
   it('displays a thumbnail image when the related Thumbnail object is ready', () => {
