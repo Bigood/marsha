@@ -1,4 +1,4 @@
-# Defines a user and associate appropriated policies
+# Define a user and associate appropriate policies
 resource "aws_iam_user" "marsha_user" {
   name = "${terraform.workspace}-marsha"
 }
