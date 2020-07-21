@@ -23,7 +23,7 @@ from .lti import LTIUser
 from .models import Document, Thumbnail, TimedTextTrack, Video
 from .utils.medialive_utils import (
     create_live_stream,
-    start_medialive_channel,
+    start_live_channel,
     stop_medialive_channel,
 )
 from .utils.s3_utils import create_presigned_post
@@ -280,7 +280,7 @@ class VideoViewSet(
                 400,
             )
 
-        start_medialive_channel(
+        start_live_channel(
             video.live_info.get("medialive").get("channel").get("id")
         )
 
