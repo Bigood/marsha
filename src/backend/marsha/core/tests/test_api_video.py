@@ -1377,7 +1377,7 @@ class VideoAPITest(TestCase):
         jwt_token.payload["permissions"] = {"can_update": True}
 
         # start a live video,
-        with mock.patch.object(api, "stop_medialive_channel"):
+        with mock.patch.object(api, "stop_live_channel"):
             response = self.client.post(
                 "/api/videos/{!s}/stop-live/".format(video.id),
                 HTTP_AUTHORIZATION="Bearer {!s}".format(jwt_token),
@@ -1433,7 +1433,7 @@ class VideoAPITest(TestCase):
         jwt_token.payload["permissions"] = {"can_update": True}
 
         # start a live video,
-        with mock.patch.object(api, "stop_medialive_channel"):
+        with mock.patch.object(api, "stop_live_channel"):
             response = self.client.post(
                 "/api/videos/{!s}/stop-live/".format(video.id),
                 HTTP_AUTHORIZATION="Bearer {!s}".format(jwt_token),
@@ -1453,7 +1453,7 @@ class VideoAPITest(TestCase):
         jwt_token.payload["permissions"] = {"can_update": True}
 
         # start a live video,
-        with mock.patch.object(api, "stop_medialive_channel"):
+        with mock.patch.object(api, "stop_live_channel"):
             response = self.client.post(
                 "/api/videos/{!s}/stop-live/".format(video.id),
                 HTTP_AUTHORIZATION="Bearer {!s}".format(jwt_token),

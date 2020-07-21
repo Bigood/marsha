@@ -24,7 +24,7 @@ from .models import Document, Thumbnail, TimedTextTrack, Video
 from .utils.medialive_utils import (
     create_live_stream,
     start_live_channel,
-    stop_medialive_channel,
+    stop_live_channel,
 )
 from .utils.s3_utils import create_presigned_post
 from .utils.time_utils import to_timestamp
@@ -320,7 +320,7 @@ class VideoViewSet(
                 400,
             )
 
-        stop_medialive_channel(
+        stop_live_channel(
             video.live_info.get("medialive").get("channel").get("id")
         )
 
