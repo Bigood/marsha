@@ -11,7 +11,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 from .. import api
 from ..api import timezone
-from ..defaults import IDLE, LIVE, LIVE_CHOICES, STATE_CHOICES
+from ..defaults import IDLE, LIVE, LIVE_CHOICES, STATE_CHOICES, STOPPED
 from ..factories import (
     ThumbnailFactory,
     TimedTextTrackFactory,
@@ -1459,3 +1459,97 @@ class VideoAPITest(TestCase):
                 HTTP_AUTHORIZATION="Bearer {!s}".format(jwt_token),
             )
         self.assertEqual(response.status_code, 400)
+
+    @override_settings(UPDATE_STATE_SHARED_SECRETS=["shared secret"])
+    def test_api_video_update_live_state(self):
+        """Confirm update video live state."""
+        video = VideoFactory(
+            id="a1a21411-bf2f-4926-b97f-3c48a124d528",
+            upload_state=LIVE,
+            live_state=IDLE,
+        )
+        data = {
+            "state": "live",
+        }
+        response = self.client.patch(
+            "/api/videos/{!s}/update_live_state/".format(video.id),
+            data,
+            content_type="application/json",
+            HTTP_X_MARSHA_SIGNATURE=(
+                "1a2d260ba1827ed1722b780cde8895c6dafbd5c54896e832be59f5dc982f2102"
+            ),
+        )
+        video.refresh_from_db()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(json.loads(response.content), {"success": True})
+        self.assertEqual(video.live_state, LIVE)
+
+    @override_settings(UPDATE_STATE_SHARED_SECRETS=["shared secret"])
+    def test_api_video_update_live_state_invalid_signature(self):
+        """Live state update with an invalid signature should fails."""
+        video = VideoFactory(
+            id="a1a21411-bf2f-4926-b97f-3c48a124d528",
+            upload_state=LIVE,
+            live_state=IDLE,
+        )
+        data = {
+            "state": "live",
+        }
+        response = self.client.patch(
+            "/api/videos/{!s}/update_live_state/".format(video.id),
+            data,
+            content_type="application/json",
+            HTTP_X_MARSHA_SIGNATURE=("invalid signature"),
+        )
+        video.refresh_from_db()
+
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(video.live_state, IDLE)
+
+    def test_api_video_update_live_state_invalid_state(self):
+        """Live state update with an invalid state should fails."""
+        video = VideoFactory(
+            id="a1a21411-bf2f-4926-b97f-3c48a124d528",
+            upload_state=LIVE,
+            live_state=IDLE,
+        )
+        invalid_state = random.choice(
+            [s[0] for s in LIVE_CHOICES if s[0] not in [LIVE, STOPPED]]
+        )
+        data = {
+            "state": invalid_state,
+        }
+        response = self.client.patch(
+            "/api/videos/{!s}/update_live_state/".format(video.id),
+            data,
+            content_type="application/json",
+            HTTP_X_MARSHA_SIGNATURE=(
+                "5f5698f31efb97df5474f54ccd93319f55a424fbd87b1086696a190dad0daddb"
+            ),
+        )
+        video.refresh_from_db()
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(video.live_state, IDLE)
+        self.assertEqual(
+            json.loads(response.content),
+            {"state": [f'"{invalid_state}" is not a valid choice.']},
+        )
+
+    @override_settings(UPDATE_STATE_SHARED_SECRETS=["shared secret"])
+    def test_api_video_update_live_state_unknown_video(self):
+        """Live state update with an unknown video should fails."""
+        data = {
+            "state": "live",
+        }
+        response = self.client.patch(
+            "/api/videos/9087c52d-cb87-4fd0-9b57-d9f28a0c69cb/update_live_state/",
+            data,
+            content_type="application/json",
+            HTTP_X_MARSHA_SIGNATURE=(
+                "1a2d260ba1827ed1722b780cde8895c6dafbd5c54896e832be59f5dc982f2102"
+            ),
+        )
+
+        self.assertEqual(response.status_code, 404)
