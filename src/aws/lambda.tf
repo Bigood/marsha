@@ -78,7 +78,7 @@ resource "aws_lambda_function" "marsha_encode_lambda" {
   environment {
     variables = {
       DISABLE_SSL_VALIDATION = "${var.update_state_disable_ssl_validation}"
-      ENDPOINT = "${var.update_state_endpoint}"
+      ENDPOINT = "${var.marsha_base_url}${var.update_state_endpoint}"
       ENV_TYPE = "${terraform.workspace}"
       MEDIA_CONVERT_ROLE      = "${aws_iam_role.media_convert_role.arn}"
       MEDIA_CONVERT_END_POINT = "${data.aws_lambda_invocation.configure_lambda_endpoint.result_map["EndpointUrl"]}"
@@ -112,7 +112,7 @@ resource "aws_lambda_function" "marsha_complete_lambda" {
   environment {
     variables = {
       DISABLE_SSL_VALIDATION = "${var.update_state_disable_ssl_validation}"
-      ENDPOINT = "${var.update_state_endpoint}"
+      ENDPOINT = "${var.marsha_base_url}${var.update_state_endpoint}"
       ENV_TYPE = "${terraform.workspace}"
       SHARED_SECRET = "${var.update_state_secret}"
     }
@@ -177,7 +177,7 @@ resource "aws_lambda_function" "marsha_medialive_lambda" {
   environment {
     variables = {
       DISABLE_SSL_VALIDATION = "${var.update_state_disable_ssl_validation}"
-      ENDPOINT = "${var.update_live_state_endpoint}"
+      MARSHA_URL = "${var.marsha_base_url}"
       SHARED_SECRET = "${var.update_state_secret}"
     }
   }

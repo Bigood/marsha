@@ -1,5 +1,3 @@
-const { IoT1ClickDevicesService } = require('aws-sdk');
-
 // Don't pollute tests with logs intended for CloudWatch
 jest.spyOn(console, 'log');
 

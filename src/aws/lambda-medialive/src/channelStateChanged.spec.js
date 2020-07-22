@@ -1,7 +1,15 @@
 'use strict';
+const marshaUrl = 'https://marsha.tld';
+process.env.DISABLE_SSL_VALIDATION = 'false';
+process.env.MARSHA_URL = marshaUrl;
+process.env.SHARED_SECRET = 'some secret';
 
-const mockUpdateState = jest.fn();
-jest.doMock('update-state', () => mockUpdateState);
+const mockSendRequest = jest.fn();
+const mockComputeSignature = jest.fn();
+jest.doMock('update-state/utils', () => ({
+  computeSignature: mockComputeSignature,
+  sendRequest: mockSendRequest,
+}));
 
 // Mock the AWS SDK calls used in encodeTimedTextTrack
 const mockDescribeChannel = jest.fn();
@@ -44,10 +52,12 @@ describe('src/channel_state_changed', () => {
       expect(error.message).toEqual('Expected status are RUNNING and STOPPED. STARTING received');
     }
 
-    expect.assertions(1);
+    expect(mockDescribeChannel).not.toHaveBeenCalled();
+    expect(mockComputeSignature).not.toHaveBeenCalled();
+    expect(mockSendRequest).not.toHaveBeenCalled();
   });
 
-  it('receives a RUNNING event and update live state', async () => {
+  it('receives a RUNNING event and updates live state', async () => {
     const event = {
       "version": "0",
       "id": "0495e5eb-9b99-56f2-7849-96389238fb55",
@@ -71,15 +81,27 @@ describe('src/channel_state_changed', () => {
       promise: () =>
         new Promise(resolve => resolve({ Name: 'video-id_stamp' })),
     });
+    mockComputeSignature.mockReturnValue('foo');
+    const expectedBody = {state: 'live'};
 
     await channelStateChanged(event);
 
-    expect(mockUpdateState).toHaveBeenCalledWith('video-id', 'live');
+    expect(mockComputeSignature).toHaveBeenCalledWith(
+      'some secret', 
+      JSON.stringify(expectedBody)
+    );
+    expect(mockSendRequest).toHaveBeenCalledWith(
+      expectedBody,
+      'foo',
+      false,
+      `${marshaUrl}/api/videos/video-id/update-live-state/`,
+      'PATCH'
+    )
     expect(mockDescribeChannel).toHaveBeenCalledWith({ ChannelId: '1234567' });
 
   });
 
-  it('receives a STOPPED event and update live state', async () => {
+  it('receives a STOPPED event and updates live state', async () => {
     const event = {
       "version": "0",
       "id": "0495e5eb-9b99-56f2-7849-96389238fb55",
@@ -103,10 +125,22 @@ describe('src/channel_state_changed', () => {
       promise: () =>
         new Promise(resolve => resolve({ Name: 'video-id_stamp' })),
     });
+    mockComputeSignature.mockReturnValue('foo');
+    const expectedBody = {state: 'stopped'};
 
     await channelStateChanged(event);
 
-    expect(mockUpdateState).toHaveBeenCalledWith('video-id', 'stopped');
+    expect(mockComputeSignature).toHaveBeenCalledWith(
+      'some secret', 
+      JSON.stringify(expectedBody)
+    );
+    expect(mockSendRequest).toHaveBeenCalledWith(
+      expectedBody,
+      'foo',
+      false,
+      `${marshaUrl}/api/videos/video-id/update-live-state/`,
+      'PATCH'
+    )
     expect(mockDescribeChannel).toHaveBeenCalledWith({ ChannelId: '1234567' });
 
   });

@@ -1,5 +1,6 @@
 const AWS = require('aws-sdk');
-const updateState = require('update-state');
+const { computeSignature, sendRequest } = require('update-state/utils');
+const { DISABLE_SSL_VALIDATION, MARSHA_URL, SHARED_SECRET } = process.env;
 
 const mediaLive = new AWS.MediaLive({ apiVersion: '2017-10-14' });
 
@@ -24,7 +25,18 @@ module.exports = async (event) => {
   }).promise();
 
   const videoId = channel.Name.split("_")[0];
+  const body = {
+    state: marshaStatus[status],
+  };
 
-  return await updateState(videoId, marshaStatus[status]);
+  const signature = computeSignature(SHARED_SECRET, JSON.stringify(body));
+
+  return await sendRequest(
+    body,
+    signature,
+    DISABLE_SSL_VALIDATION ? false : true,
+    `${MARSHA_URL}/api/videos/${videoId}/update-live-state/`,
+    'PATCH'
+  );  
 };
 
