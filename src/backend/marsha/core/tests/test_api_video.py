@@ -1472,7 +1472,7 @@ class VideoAPITest(TestCase):
             "state": "live",
         }
         response = self.client.patch(
-            "/api/videos/{!s}/update_live_state/".format(video.id),
+            "/api/videos/{!s}/update-live-state/".format(video.id),
             data,
             content_type="application/json",
             HTTP_X_MARSHA_SIGNATURE=(
@@ -1497,7 +1497,7 @@ class VideoAPITest(TestCase):
             "state": "live",
         }
         response = self.client.patch(
-            "/api/videos/{!s}/update_live_state/".format(video.id),
+            "/api/videos/{!s}/update-live-state/".format(video.id),
             data,
             content_type="application/json",
             HTTP_X_MARSHA_SIGNATURE=("invalid signature"),
@@ -1521,7 +1521,7 @@ class VideoAPITest(TestCase):
             "state": invalid_state,
         }
         response = self.client.patch(
-            "/api/videos/{!s}/update_live_state/".format(video.id),
+            "/api/videos/{!s}/update-live-state/".format(video.id),
             data,
             content_type="application/json",
             HTTP_X_MARSHA_SIGNATURE=(
@@ -1544,7 +1544,7 @@ class VideoAPITest(TestCase):
             "state": "live",
         }
         response = self.client.patch(
-            "/api/videos/9087c52d-cb87-4fd0-9b57-d9f28a0c69cb/update_live_state/",
+            "/api/videos/9087c52d-cb87-4fd0-9b57-d9f28a0c69cb/update-live-state/",
             data,
             content_type="application/json",
             HTTP_X_MARSHA_SIGNATURE=(

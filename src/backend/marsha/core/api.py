@@ -269,7 +269,7 @@ class VideoViewSet(
     @action(
         methods=["patch"],
         detail=True,
-        url_path="update_live_state",
+        url_path="update-live-state",
         permission_classes=[],
     )
     # pylint: disable=unused-argument
