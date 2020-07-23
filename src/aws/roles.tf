@@ -354,7 +354,7 @@ resource "aws_iam_policy" "ssm_read_only" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "medialive_ssm_access_policiy_attachment" {
+resource "aws_iam_role_policy_attachment" "medialive_ssm_access_policy_attachment" {
   role        = "${aws_iam_role.medialive_access_role.name}"
   policy_arn  = "${aws_iam_policy.ssm_read_only.arn}"
 }
@@ -435,7 +435,7 @@ resource "aws_iam_policy" "medialive_custom_policy" {
 EOF
 }
 
-resource "aws_iam_role_policy_attachment" "medialive_custom_policiy_attachment" {
+resource "aws_iam_role_policy_attachment" "medialive_custom_policy_attachment" {
   role        = "${aws_iam_role.medialive_access_role.name}"
   policy_arn  = "${aws_iam_policy.medialive_custom_policy.arn}"
 }

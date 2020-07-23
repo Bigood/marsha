@@ -342,9 +342,9 @@ class VideoSerializer(serializers.ModelSerializer):
             A dictionnary containing all info needed to manage a live stream for an admin.
             For other users, an empty dictionnary is returned.
         """
-        is_admin = self.context.get("is_admin", False)
+        can_return_live_info = self.context.get("can_return_live_info", False)
 
-        if obj.upload_state != LIVE or is_admin is False:
+        if obj.upload_state != LIVE or can_return_live_info is False:
             return {}
 
         return {

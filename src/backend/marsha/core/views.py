@@ -131,7 +131,8 @@ class BaseLTIView(ABC, TemplateResponseMixin, View):
             app_data = {
                 "modelName": self.model.RESOURCE_NAME,
                 "resource": self.serializer_class(
-                    resource, context={"is_admin": lti.is_admin or lti.is_instructor}
+                    resource,
+                    context={"can_return_live_info": lti.is_admin or lti.is_instructor},
                 ).data
                 if resource
                 else None,

@@ -106,7 +106,7 @@ class VideoViewSet(
         """Extra context provided to the serializer class."""
         context = super().get_serializer_context()
         # The API is only reachable by admin users.
-        context["is_admin"] = True
+        context["can_return_live_info"] = True
 
         return context
 

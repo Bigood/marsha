@@ -7,29 +7,20 @@ from django.conf import settings
 import boto3
 
 
+aws_credentials = {
+    "aws_access_key_id": settings.AWS_ACCESS_KEY_ID,
+    "aws_secret_access_key": settings.AWS_SECRET_ACCESS_KEY,
+    "region_name": settings.AWS_S3_REGION_NAME,
+}
+
 # Configure medialive client
-medialive_client = boto3.client(
-    "medialive",
-    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-    region_name=settings.AWS_S3_REGION_NAME,
-)
+medialive_client = boto3.client("medialive", **aws_credentials)
 
 # Configure mediapackage client
-mediapackage_client = boto3.client(
-    "mediapackage",
-    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-    region_name=settings.AWS_S3_REGION_NAME,
-)
+mediapackage_client = boto3.client("mediapackage", **aws_credentials)
 
 # Configure SSM client
-ssm_client = boto3.client(
-    "ssm",
-    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-    region_name=settings.AWS_S3_REGION_NAME,
-)
+ssm_client = boto3.client("ssm", **aws_credentials)
 
 
 def create_mediapackage_channel(key):
@@ -68,7 +59,7 @@ def create_mediapackage_channel(key):
         Type="String",
     )
 
-    # Create an endpoint. This endpoint will be used to whatch the stream.
+    # Create an endpoint. This endpoint will be used to watch the stream.
     hls_endpoint = mediapackage_client.create_origin_endpoint(
         ChannelId=channel["Id"],
         Id=f"{channel['Id']}-hls",
@@ -103,8 +94,6 @@ def create_mediapackage_channel(key):
             "SegmentTemplateFormat": "NUMBER_WITH_TIMELINE",
         },
     )
-
-    print(hls_endpoint)
 
     return [channel, hls_endpoint, dash_endpoint]
 
@@ -146,8 +135,8 @@ def create_medialive_input(key):
 
     Returns
     -------
-    dictionnary
-        Dictrionnary returned by the AWS API once a medialive input is created
+    dictionary
+        Dictionary returned by the AWS API once a medialive input is created
     """
     medialive_input = medialive_client.create_input(
         InputSecurityGroups=[get_or_create_input_security_group()],
@@ -174,16 +163,16 @@ def create_medialive_channel(key, medialive_input, mediapackage_channel):
     key : string
         key representing the video in AWS
 
-    medialive_input: dictionnary
-        dictionnary containing newly created medialive input
+    medialive_input: dictionary
+        dictionary containing newly created medialive input
 
-    mediapackage_channel: dictionnary
-        dictionnary containing newly created mediapackage channel
+    mediapackage_channel: dictionary
+        dictionary containing newly created mediapackage channel
 
     Returns
     -------
-    dictionnary
-        Dictrionnary returned by the AWS API once a medialive channel is created
+    dictionary
+        Dictionary returned by the AWS API once a medialive channel is created
     """
     dir_path = os.path.dirname(os.path.realpath(__file__))
     with open(f"{dir_path}/medialive_profiles/medialive-720p.json") as encoding:
@@ -243,8 +232,8 @@ def create_live_stream(key):
 
     Returns
     -------
-    dictionnary
-        Dictrionnary containing all information to store in order to manage
+    dictionary
+        Dictionary containing all information to store in order to manage
         a live stream life cycle.
     """
     mediapackage_channel, hls_endpoint, dash_endpoint = create_mediapackage_channel(key)
