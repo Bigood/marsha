@@ -75,7 +75,7 @@ def create_mediapackage_channel(key):
             "SegmentDurationSeconds": 1,
         },
     )
-    
+
     return [channel, hls_endpoint]
 
 

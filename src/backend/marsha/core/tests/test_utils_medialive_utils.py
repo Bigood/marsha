@@ -201,10 +201,7 @@ class MediaLiveUtilsTestCase(TestCase):
                 },
             )
 
-            [
-                channel,
-                hls_endpoint,
-            ] = medialive_utils.create_mediapackage_channel(key)
+            [channel, hls_endpoint] = medialive_utils.create_mediapackage_channel(key)
 
             mediapackage_stubber.assert_no_pending_responses()
             ssm_stubber.assert_no_pending_responses()
