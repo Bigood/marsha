@@ -1,11 +1,12 @@
 import { MediaPlayerClass, MediaPlayerSettingClass } from 'dashjs';
+import Hls from 'hls.js';
 import Plyr, { SourceInfo } from 'plyr';
 
 import { appData, getDecodedJwt } from '../data/appData';
 import { useTimedTextTrackApi } from '../data/stores/useTimedTextTrack';
 import { useTranscriptTimeSelectorApi } from '../data/stores/useTranscriptTimeSelector';
 import { intl } from '../index';
-import { timedTextMode, Video, videoSize } from '../types/tracks';
+import { timedTextMode, Video, videoSize, uploadState } from '../types/tracks';
 import {
   InitializedContextExtensions,
   InteractedContextExtensions,
@@ -15,6 +16,7 @@ import { isHlsSupported, isMSESupported } from '../utils/isAbrSupported';
 import { Maybe } from '../utils/types';
 import { XAPIStatement } from '../XAPI/XAPIStatement';
 import { createDashPlayer } from './createDashPlayer';
+import { createHlsPlayer } from './createHlsPlayer';
 import { i18nMessages } from './i18n/plyrTranslation';
 
 const trackTextKind: { [key in timedTextMode]?: string } = {
@@ -161,7 +163,11 @@ export const createPlyrPlayer = (
     player.source = sources;
   }
 
-  if (isMSESupported()) {
+  if (video.upload_state === uploadState.LIVE && Hls.isSupported()) {
+    createHlsPlayer(video, videoNode);
+  }
+
+  if (video.upload_state !== uploadState.LIVE && isMSESupported()) {
     dash = createDashPlayer(video, videoNode);
     dash.on('qualityChangeRendered', (e) => {
       if (isNaN(e.oldQuality)) {
