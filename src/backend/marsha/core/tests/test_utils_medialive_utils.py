@@ -153,13 +153,6 @@ class MediaLiveUtilsTestCase(TestCase):
             "Url": "https://endpoint1/channel.m3u8",
             "Id": "enpoint1",
         }
-
-        mediapackage_create_dash_origin_endpoint_response = {
-            "ChannelId": "channel1",
-            "Id": "enpoint2",
-            "Url": "https://endpoint2/channel-dash.mpd",
-        }
-
         with Stubber(
             medialive_utils.mediapackage_client
         ) as mediapackage_stubber, Stubber(medialive_utils.ssm_client) as ssm_stubber:
@@ -201,32 +194,9 @@ class MediaLiveUtilsTestCase(TestCase):
                         "AdMarkers": "PASSTHROUGH",
                         "IncludeIframeOnlyStream": False,
                         "PlaylistType": "EVENT",
-                        "PlaylistWindowSeconds": 60,
+                        "PlaylistWindowSeconds": 5,
                         "ProgramDateTimeIntervalSeconds": 0,
-                        "SegmentDurationSeconds": 6,
-                    },
-                },
-            )
-
-            mediapackage_stubber.add_response(
-                "create_origin_endpoint",
-                service_response=mediapackage_create_dash_origin_endpoint_response,
-                expected_params={
-                    "ChannelId": "channel1",
-                    "Id": "channel1-dash",
-                    "ManifestName": "channel1-dash",
-                    "StartoverWindowSeconds": 86400,
-                    "TimeDelaySeconds": 0,
-                    "DashPackage": {
-                        "SegmentDurationSeconds": 2,
-                        "ManifestWindowSeconds": 60,
-                        "Profile": "NONE",
-                        "MinUpdatePeriodSeconds": 15,
-                        "MinBufferTimeSeconds": 30,
-                        "SuggestedPresentationDelaySeconds": 25,
-                        "PeriodTriggers": [],
-                        "ManifestLayout": "FULL",
-                        "SegmentTemplateFormat": "NUMBER_WITH_TIMELINE",
+                        "SegmentDurationSeconds": 1,
                     },
                 },
             )
@@ -234,7 +204,6 @@ class MediaLiveUtilsTestCase(TestCase):
             [
                 channel,
                 hls_endpoint,
-                dash_endpoint,
             ] = medialive_utils.create_mediapackage_channel(key)
 
             mediapackage_stubber.assert_no_pending_responses()
@@ -242,9 +211,6 @@ class MediaLiveUtilsTestCase(TestCase):
 
         self.assertEqual(channel, mediapackage_create_channel_response)
         self.assertEqual(hls_endpoint, mediapackage_create_hls_origin_endpoint_response)
-        self.assertEqual(
-            dash_endpoint, mediapackage_create_dash_origin_endpoint_response
-        )
 
     def test_create_medialive_input(self):
         """Create and return an AWS medialive input."""
@@ -392,11 +358,6 @@ class MediaLiveUtilsTestCase(TestCase):
                     "Url": "https://endpoint1/channel.m3u8",
                     "Id": "enpoint1",
                 },
-                {
-                    "ChannelId": "channel1",
-                    "Id": "enpoint2",
-                    "Url": "https://endpoint2/channel-dash.mpd",
-                },
             ]
             mock_medialive_input.return_value = {
                 "Input": {
@@ -432,10 +393,6 @@ class MediaLiveUtilsTestCase(TestCase):
                         "hls": {
                             "id": "enpoint1",
                             "url": "https://endpoint1/channel.m3u8",
-                        },
-                        "dash": {
-                            "id": "enpoint2",
-                            "url": "https://endpoint2/channel-dash.mpd",
                         },
                     },
                 },

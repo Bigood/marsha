@@ -1046,11 +1046,7 @@ class VideoAPITest(TestCase):
                     "hls": {
                         "id": "endpoint1",
                         "url": "https://channel_endpoint1/live.m3u8",
-                    },
-                    "dash": {
-                        "id": "endpoint2",
-                        "url": "https://channel_endpoint2/live.mpd",
-                    },
+                    }
                 },
             },
         }
@@ -1079,7 +1075,7 @@ class VideoAPITest(TestCase):
                 "urls": {
                     "manifests": {
                         "hls": "https://channel_endpoint1/live.m3u8",
-                        "dash": "https://channel_endpoint2/live.mpd",
+                        "dash": None,
                     },
                     "mp4": {},
                     "thumbnails": {},
@@ -1185,10 +1181,6 @@ class VideoAPITest(TestCase):
                             "id": "endpoint1",
                             "url": "https://channel_endpoint1/live.m3u8",
                         },
-                        "dash": {
-                            "id": "endpoint2",
-                            "url": "https://channel_endpoint2/live.mpd",
-                        },
                     },
                 },
             },
@@ -1222,7 +1214,7 @@ class VideoAPITest(TestCase):
                 "urls": {
                     "manifests": {
                         "hls": "https://channel_endpoint1/live.m3u8",
-                        "dash": "https://channel_endpoint2/live.mpd",
+                        "dash": None,
                     },
                     "mp4": {},
                     "thumbnails": {},
@@ -1363,10 +1355,6 @@ class VideoAPITest(TestCase):
                             "id": "endpoint1",
                             "url": "https://channel_endpoint1/live.m3u8",
                         },
-                        "dash": {
-                            "id": "endpoint2",
-                            "url": "https://channel_endpoint2/live.mpd",
-                        },
                     },
                 },
             },
@@ -1400,7 +1388,7 @@ class VideoAPITest(TestCase):
                 "urls": {
                     "manifests": {
                         "hls": "https://channel_endpoint1/live.m3u8",
-                        "dash": "https://channel_endpoint2/live.mpd",
+                        "dash": None,
                     },
                     "mp4": {},
                     "thumbnails": {},

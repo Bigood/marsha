@@ -70,32 +70,13 @@ def create_mediapackage_channel(key):
             "AdMarkers": "PASSTHROUGH",
             "IncludeIframeOnlyStream": False,
             "PlaylistType": "EVENT",
-            "PlaylistWindowSeconds": 60,
+            "PlaylistWindowSeconds": 5,
             "ProgramDateTimeIntervalSeconds": 0,
-            "SegmentDurationSeconds": 6,
+            "SegmentDurationSeconds": 1,
         },
     )
-
-    dash_endpoint = mediapackage_client.create_origin_endpoint(
-        ChannelId=channel["Id"],
-        Id=f"{channel['Id']}-dash",
-        ManifestName=f"{channel['Id']}-dash",
-        StartoverWindowSeconds=86400,
-        TimeDelaySeconds=0,
-        DashPackage={
-            "SegmentDurationSeconds": 2,
-            "ManifestWindowSeconds": 60,
-            "Profile": "NONE",
-            "MinUpdatePeriodSeconds": 15,
-            "MinBufferTimeSeconds": 30,
-            "SuggestedPresentationDelaySeconds": 25,
-            "PeriodTriggers": [],
-            "ManifestLayout": "FULL",
-            "SegmentTemplateFormat": "NUMBER_WITH_TIMELINE",
-        },
-    )
-
-    return [channel, hls_endpoint, dash_endpoint]
+    
+    return [channel, hls_endpoint]
 
 
 def get_or_create_input_security_group():
@@ -236,7 +217,7 @@ def create_live_stream(key):
         Dictionary containing all information to store in order to manage
         a live stream life cycle.
     """
-    mediapackage_channel, hls_endpoint, dash_endpoint = create_mediapackage_channel(key)
+    mediapackage_channel, hls_endpoint = create_mediapackage_channel(key)
     medialive_input = create_medialive_input(key)
 
     medialive_channel = create_medialive_channel(
@@ -258,7 +239,6 @@ def create_live_stream(key):
             "channel": {"id": mediapackage_channel["Id"]},
             "endpoints": {
                 "hls": {"id": hls_endpoint["Id"], "url": hls_endpoint["Url"]},
-                "dash": {"id": dash_endpoint["Id"], "url": dash_endpoint["Url"]},
             },
         },
     }
