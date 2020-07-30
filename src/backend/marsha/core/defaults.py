@@ -2,7 +2,7 @@
 from django.utils.translation import gettext_lazy as _
 
 
-PENDING, PROCESSING, ERROR, READY, LIVE, IDLE, STARTING, STOPPED = (
+PENDING, PROCESSING, ERROR, READY, LIVE, IDLE, STARTING, STOPPED, RUNNING = (
     "pending",
     "processing",
     "error",
@@ -11,6 +11,7 @@ PENDING, PROCESSING, ERROR, READY, LIVE, IDLE, STARTING, STOPPED = (
     "idle",
     "starting",
     "stopped",
+    "running",
 )
 STATE_CHOICES = (
     (PENDING, _("pending")),
@@ -23,6 +24,6 @@ STATE_CHOICES = (
 LIVE_CHOICES = (
     (IDLE, _("idle")),
     (STARTING, _("starting")),
-    (LIVE, _("live")),
+    (RUNNING, _("running")),
     (STOPPED, _("stopped")),
 )

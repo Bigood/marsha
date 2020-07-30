@@ -26,7 +26,12 @@ class Migration(migrations.Migration):
             name="live_state",
             field=models.CharField(
                 blank=True,
-                choices=[("pending", "pending"), ("live", "live"), ("ended", "ended")],
+                choices=[
+                    ("idle", "idle"),
+                    ("starting", "starting"),
+                    ("running", "running"),
+                    ("stopped", "stopped"),
+                ],
                 help_text="state of the live mode.",
                 max_length=20,
                 null=True,
