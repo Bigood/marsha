@@ -39,7 +39,7 @@ describe('sideEffects/stopLive', () => {
       },
     },
     should_use_subtitle_as_transcript: false,
-    live_state: liveState.LIVE,
+    live_state: liveState.RUNNING,
     live_info: {
       medialive: {
         input: {
