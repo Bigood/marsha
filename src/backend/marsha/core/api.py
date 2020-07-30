@@ -250,7 +250,7 @@ class VideoViewSet(
         if video.upload_state != defaults.LIVE:
             return Response({"error": "Impossible to stop a non live video."}, 400)
 
-        if video.live_state != defaults.LIVE:
+        if video.live_state != defaults.RUNNING:
             return Response(
                 {
                     "error": f"Impossible to stop live video. Current status is {video.live_state}"

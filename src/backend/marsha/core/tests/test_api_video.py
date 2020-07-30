@@ -11,7 +11,7 @@ from rest_framework_simplejwt.tokens import AccessToken
 
 from .. import api
 from ..api import timezone
-from ..defaults import IDLE, LIVE, LIVE_CHOICES, STATE_CHOICES, STOPPED
+from ..defaults import IDLE, LIVE, LIVE_CHOICES, RUNNING, STATE_CHOICES, STOPPED
 from ..factories import (
     ThumbnailFactory,
     TimedTextTrackFactory,
@@ -1336,7 +1336,7 @@ class VideoAPITest(TestCase):
         video = VideoFactory(
             id="27a23f52-3379-46a2-94fa-697b59cfe3c7",
             upload_state=LIVE,
-            live_state=LIVE,
+            live_state=RUNNING,
             live_info={
                 "medialive": {
                     "input": {
