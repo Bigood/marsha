@@ -75,7 +75,7 @@ export const DashboardVideoLive = ({ video }: DashboardVideoLiveProps) => {
 
       const incomingVideo: Video = await response.json();
 
-      if (incomingVideo.live_state === liveState.LIVE) {
+      if (incomingVideo.live_state === liveState.RUNNING) {
         updateVideo(incomingVideo);
       }
     } catch (error) {
@@ -131,7 +131,7 @@ export const DashboardVideoLive = ({ video }: DashboardVideoLiveProps) => {
             <FormattedMessage {...messages.liveStarting} />
           </Text>
         )}
-        {video.live_state === liveState.LIVE && (
+        {video.live_state === liveState.RUNNING && (
           <React.Fragment>
             <DashboardVideoLiveButton
               label={<FormattedMessage {...messages.showLive} />}

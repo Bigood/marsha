@@ -79,7 +79,7 @@ describe('components/DashboardVideoLive', () => {
       wrapInIntlProvider(
         wrapInRouter(
           <DashboardVideoLive
-            video={{ ...video, live_state: liveState.LIVE }}
+            video={{ ...video, live_state: liveState.RUNNING }}
           />,
         ),
       ),
@@ -94,7 +94,7 @@ describe('components/DashboardVideoLive', () => {
       wrapInIntlProvider(
         wrapInRouter(
           <DashboardVideoLive
-            video={{ ...video, live_state: liveState.LIVE }}
+            video={{ ...video, live_state: liveState.RUNNING }}
           />,
           [
             {
@@ -153,7 +153,7 @@ describe('components/DashboardVideoLive', () => {
     fetchMock.restore();
     fetchMock.mock(
       '/api/videos/9e02ae7d-6c18-40ce-95e8-f87bbeae31c5/',
-      JSON.stringify({ ...video, live_state: liveState.LIVE }),
+      JSON.stringify({ ...video, live_state: liveState.RUNNING }),
     );
 
     // Second backend call
@@ -172,7 +172,7 @@ describe('components/DashboardVideoLive', () => {
       wrapInIntlProvider(
         wrapInRouter(
           <DashboardVideoLive
-            video={{ ...video, live_state: liveState.LIVE }}
+            video={{ ...video, live_state: liveState.RUNNING }}
           />,
         ),
       ),
