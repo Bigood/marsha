@@ -493,7 +493,7 @@ class UpdateStateSerializer(serializers.Serializer):
 
 
 class UpdateLiveStateSerializer(serializers.Serializer):
-    """A serializer vailidating data submitted on the UpdateLiveState API endpoint."""
+    """A serializer to validate data submitted on the UpdateLiveState API endpoint."""
 
     state = serializers.ChoiceField(
         tuple(c for c in LIVE_CHOICES if c[0] in (LIVE, STOPPED))
