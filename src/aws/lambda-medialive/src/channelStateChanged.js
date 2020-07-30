@@ -6,10 +6,6 @@ const mediaLive = new AWS.MediaLive({ apiVersion: '2017-10-14' });
 
 module.exports = async (event) => {
   const status = event.detail.state;
-  const marshaStatus = {
-    RUNNING: "live",
-    STOPPED: "stopped"
-  }
 
   if (!["RUNNING", "STOPPED"].includes(status)) {
     throw new Error(`Expected status are RUNNING and STOPPED. ${status} received`);
@@ -26,7 +22,7 @@ module.exports = async (event) => {
 
   const videoId = channel.Name.split("_")[0];
   const body = {
-    state: marshaStatus[status],
+    state: status.toLowerCase(),
   };
 
   const signature = computeSignature(SHARED_SECRET, JSON.stringify(body));

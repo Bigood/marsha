@@ -82,7 +82,7 @@ describe('src/channel_state_changed', () => {
         new Promise(resolve => resolve({ Name: 'video-id_stamp' })),
     });
     mockComputeSignature.mockReturnValue('foo');
-    const expectedBody = {state: 'live'};
+    const expectedBody = {state: 'running'};
 
     await channelStateChanged(event);
 
