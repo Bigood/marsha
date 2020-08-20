@@ -51,6 +51,10 @@ describe('components/DashboardVideoLiveStopButton', () => {
       thumbnails: {},
     },
     should_use_subtitle_as_transcript: false,
+    playlist: {
+      title: 'foo',
+      lti_id: 'foo+context_id',
+    },
     live_state: liveState.RUNNING,
     live_info: {
       medialive: {
