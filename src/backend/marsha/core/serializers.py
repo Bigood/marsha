@@ -19,6 +19,7 @@ from .defaults import (
     LIVE_CHOICES,
     PROCESSING,
     READY,
+    RUNNING,
     STATE_CHOICES,
     STOPPED,
 )
@@ -496,7 +497,7 @@ class UpdateLiveStateSerializer(serializers.Serializer):
     """A serializer to validate data submitted on the UpdateLiveState API endpoint."""
 
     state = serializers.ChoiceField(
-        tuple(c for c in LIVE_CHOICES if c[0] in (LIVE, STOPPED))
+        tuple(c for c in LIVE_CHOICES if c[0] in (RUNNING, STOPPED))
     )
 
 

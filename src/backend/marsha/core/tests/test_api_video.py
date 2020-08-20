@@ -1161,6 +1161,8 @@ class VideoAPITest(TestCase):
         """An instructor should be able to start a live."""
         video = VideoFactory(
             id="27a23f52-3379-46a2-94fa-697b59cfe3c7",
+            playlist__title="foo bar",
+            playlist__lti_id="course-v1:ufr+mathematics+00001",
             upload_state=LIVE,
             live_state=IDLE,
             live_info={
@@ -1221,6 +1223,10 @@ class VideoAPITest(TestCase):
                 },
                 "should_use_subtitle_as_transcript": False,
                 "has_transcript": False,
+                "playlist": {
+                    "title": "foo bar",
+                    "lti_id": "course-v1:ufr+mathematics+00001",
+                },
                 "live_state": "starting",
                 "live_info": {
                     "medialive": {
@@ -1335,6 +1341,8 @@ class VideoAPITest(TestCase):
         """An instructor should be able to stop a live."""
         video = VideoFactory(
             id="27a23f52-3379-46a2-94fa-697b59cfe3c7",
+            playlist__title="foo bar",
+            playlist__lti_id="course-v1:ufr+mathematics+00001",
             upload_state=LIVE,
             live_state=RUNNING,
             live_info={
@@ -1395,6 +1403,10 @@ class VideoAPITest(TestCase):
                 },
                 "should_use_subtitle_as_transcript": False,
                 "has_transcript": False,
+                "playlist": {
+                    "title": "foo bar",
+                    "lti_id": "course-v1:ufr+mathematics+00001",
+                },
                 "live_state": "stopped",
                 "live_info": {
                     "medialive": {
@@ -1433,7 +1445,7 @@ class VideoAPITest(TestCase):
         video = VideoFactory(
             id="27a23f52-3379-46a2-94fa-697b59cfe3c7",
             upload_state=LIVE,
-            live_state=random.choice([s[0] for s in LIVE_CHOICES if s[0] != "live"]),
+            live_state=random.choice([s[0] for s in LIVE_CHOICES if s[0] != "running"]),
         )
         jwt_token = AccessToken()
         jwt_token.payload["resource_id"] = str(video.id)
@@ -1457,21 +1469,21 @@ class VideoAPITest(TestCase):
             live_state=IDLE,
         )
         data = {
-            "state": "live",
+            "state": "running",
         }
         response = self.client.patch(
             "/api/videos/{!s}/update-live-state/".format(video.id),
             data,
             content_type="application/json",
             HTTP_X_MARSHA_SIGNATURE=(
-                "1a2d260ba1827ed1722b780cde8895c6dafbd5c54896e832be59f5dc982f2102"
+                "6ec2b079cc80ecbbdbc4228d117fd2433affd439629561b34c0d33fae1ff6321"
             ),
         )
         video.refresh_from_db()
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content), {"success": True})
-        self.assertEqual(video.live_state, LIVE)
+        self.assertEqual(video.live_state, RUNNING)
 
     @override_settings(UPDATE_STATE_SHARED_SECRETS=["shared secret"])
     def test_api_video_update_live_state_invalid_signature(self):
@@ -1482,7 +1494,7 @@ class VideoAPITest(TestCase):
             live_state=IDLE,
         )
         data = {
-            "state": "live",
+            "state": "running",
         }
         response = self.client.patch(
             "/api/videos/{!s}/update-live-state/".format(video.id),
@@ -1503,7 +1515,7 @@ class VideoAPITest(TestCase):
             live_state=IDLE,
         )
         invalid_state = random.choice(
-            [s[0] for s in LIVE_CHOICES if s[0] not in [LIVE, STOPPED]]
+            [s[0] for s in LIVE_CHOICES if s[0] not in [RUNNING, STOPPED]]
         )
         data = {
             "state": invalid_state,
@@ -1529,14 +1541,14 @@ class VideoAPITest(TestCase):
     def test_api_video_update_live_state_unknown_video(self):
         """Live state update with an unknown video should fails."""
         data = {
-            "state": "live",
+            "state": "running",
         }
         response = self.client.patch(
             "/api/videos/9087c52d-cb87-4fd0-9b57-d9f28a0c69cb/update-live-state/",
             data,
             content_type="application/json",
             HTTP_X_MARSHA_SIGNATURE=(
-                "1a2d260ba1827ed1722b780cde8895c6dafbd5c54896e832be59f5dc982f2102"
+                "6ec2b079cc80ecbbdbc4228d117fd2433affd439629561b34c0d33fae1ff6321"
             ),
         )
 
