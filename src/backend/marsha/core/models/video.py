@@ -1,6 +1,6 @@
 """This module holds the models for the marsha project."""
 from django.conf import settings
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
@@ -31,7 +31,7 @@ class Video(BaseFile):
         verbose_name=_("video sizes"),
         help_text=_("List of available sizes for this video"),
     )
-    live_info = JSONField(
+    live_info = models.JSONField(
         null=True,
         blank=True,
         verbose_name=_("Live info"),
