@@ -51,6 +51,10 @@ describe('components/DashboardVideoLiveStartButton', () => {
       thumbnails: {},
     },
     should_use_subtitle_as_transcript: false,
+    playlist: {
+      title: 'foo',
+      lti_id: 'foo+context_id',
+    },
     live_state: liveState.IDLE,
     live_info: {
       medialive: {
